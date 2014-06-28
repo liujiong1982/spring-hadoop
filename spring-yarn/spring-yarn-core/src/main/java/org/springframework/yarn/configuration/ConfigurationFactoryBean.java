@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FsUrlStreamHandlerFactory;
+import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.springframework.beans.factory.BeanClassLoaderAware;
@@ -43,6 +44,12 @@ public class ConfigurationFactoryBean implements BeanClassLoaderAware, Initializ
 
 	private static final Log log = LogFactory.getLog(ConfigurationFactoryBean.class);
 
+	public static final String KEYTAB="keytab";
+	public static final String PRINCIPAL="principal";
+	public static final String SECURITYMETHOD="securityMethod";
+	public static final String ISUSERKINIT="isUserKinit";
+	public static final String KERBOSE="kerbose";
+	
 	private YarnConfiguration internalConfig;
 	private YarnConfiguration configuration;
 	private Set<Resource> resources;
@@ -55,6 +62,29 @@ public class ConfigurationFactoryBean implements BeanClassLoaderAware, Initializ
 	private String fsUri;
 	private String rmAddress;
 	private String schedulerAddress;
+	
+	
+	private String keytab;
+	private String principal;
+	private String securityMethod;
+
+	public void setKeytab(String keytab) {
+		this.keytab = keytab;
+	}
+
+	public void setPrincipal(String principal) {
+		this.principal = principal;
+	}
+
+	public void setSecurityMethod(String securityMethod) {
+		this.securityMethod = securityMethod;
+	}
+
+	public void setIsUserKinit(boolean isUserKinit) {
+		this.isUserKinit = isUserKinit;
+	}
+
+	private boolean isUserKinit;
 
 	@Override
 	public YarnConfiguration getObject() {
@@ -102,6 +132,32 @@ public class ConfigurationFactoryBean implements BeanClassLoaderAware, Initializ
 
 		if (StringUtils.hasText(schedulerAddress)) {
 			internalConfig.set(YarnConfiguration.RM_SCHEDULER_ADDRESS, schedulerAddress.trim());
+		}
+		
+		if (StringUtils.hasText(keytab)) {
+			internalConfig.set(KEYTAB, keytab.trim());
+		}
+		
+		if (StringUtils.hasText(principal)) {
+			internalConfig.set(PRINCIPAL, principal.trim());
+		}
+		
+		if (isUserKinit==true) {
+			internalConfig.setBoolean(ISUSERKINIT, isUserKinit);
+		}
+		
+		if (StringUtils.hasText(securityMethod)) {
+			internalConfig.set(SECURITYMETHOD, securityMethod.trim());
+			if(securityMethod.equals(KERBOSE)){
+				internalConfig.setBoolean("hadoop.security.authorization", true);
+				internalConfig.set("hadoop.security.authentication", "kerberos");
+				internalConfig.set("dfs.namenode.kerberos.principal", "hdfs/_HOST@EXAMPLE.COM");
+				internalConfig.set("yarn.resourcemanager.principal", "yarn/_HOST@EXAMPLE.COM");
+//				UserGroupInformation.setConfiguration(internalConfig);
+//				if(isUserKinit==false&&StringUtils.hasText(keytab)&&StringUtils.hasText(principal)){
+//					SecurityUtil.login(internalConfig, keytab, principal);
+//				}
+			}
 		}
 
 		if (initialize) {

@@ -96,7 +96,7 @@ public abstract class AbstractYarnClusterTests implements ApplicationContextAwar
 	 *
 	 * @param yarnCluster the Yarn cluster
 	 */
-	@Autowired
+//	@Autowired
 	public void setYarnCluster(YarnCluster yarnCluster) {
 		this.yarnCluster = yarnCluster;
 	}

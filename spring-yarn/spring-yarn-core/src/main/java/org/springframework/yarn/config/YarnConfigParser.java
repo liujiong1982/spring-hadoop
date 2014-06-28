@@ -43,6 +43,10 @@ class YarnConfigParser extends AbstractPropertiesConfiguredBeanDefinitionParser 
 	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder) {
 		super.doParse(element, parserContext, builder);
 		NamespaceUtils.setCSVProperty(element, builder, "resources");
+		NamespaceUtils.setPropertyValue(element, builder, "keytab");
+		NamespaceUtils.setPropertyValue(element, builder, "principal");
+		NamespaceUtils.setPropertyValue(element, builder, "securityMethod");
+		NamespaceUtils.setPropertyValue(element, builder, "isUserKinit");
 	}
 
 	@Override
