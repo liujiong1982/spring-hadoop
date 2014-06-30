@@ -49,6 +49,7 @@ public class ConfigurationFactoryBean implements BeanClassLoaderAware, Initializ
 	public static final String SECURITYMETHOD="securityMethod";
 	public static final String ISUSERKINIT="isUserKinit";
 	public static final String KERBOSE="kerbose";
+
 	
 	private YarnConfiguration internalConfig;
 	private YarnConfiguration configuration;
@@ -153,10 +154,10 @@ public class ConfigurationFactoryBean implements BeanClassLoaderAware, Initializ
 				internalConfig.set("hadoop.security.authentication", "kerberos");
 				internalConfig.set("dfs.namenode.kerberos.principal", "hdfs/_HOST@EXAMPLE.COM");
 				internalConfig.set("yarn.resourcemanager.principal", "yarn/_HOST@EXAMPLE.COM");
-//				UserGroupInformation.setConfiguration(internalConfig);
-//				if(isUserKinit==false&&StringUtils.hasText(keytab)&&StringUtils.hasText(principal)){
-//					SecurityUtil.login(internalConfig, keytab, principal);
-//				}
+				UserGroupInformation.setConfiguration(internalConfig);
+				if(isUserKinit==false&&StringUtils.hasText(keytab)&&StringUtils.hasText(principal)){
+					SecurityUtil.login(internalConfig, KEYTAB, PRINCIPAL);
+				}
 			}
 		}
 

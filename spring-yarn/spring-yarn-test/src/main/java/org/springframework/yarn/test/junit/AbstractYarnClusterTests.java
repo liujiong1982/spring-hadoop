@@ -37,8 +37,9 @@ import org.springframework.yarn.test.context.YarnCluster;
  * @author Janne Valkealahti
  *
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-public abstract class AbstractYarnClusterTests implements ApplicationContextAware {
+//@RunWith(SpringJUnit4ClassRunner.class)
+//public abstract class AbstractYarnClusterTests implements ApplicationContextAware {
+public abstract class AbstractYarnClusterTests {
 
 	protected ApplicationContext applicationContext;
 
@@ -57,7 +58,7 @@ public abstract class AbstractYarnClusterTests implements ApplicationContextAwar
 		return applicationContext;
 	}
 
-	@Override
+//	@Override
 	public final void setApplicationContext(ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
 	}
@@ -77,7 +78,7 @@ public abstract class AbstractYarnClusterTests implements ApplicationContextAwar
 	 *
 	 * @param configuration the Configuration
 	 */
-	@Autowired
+	//@Autowired
 	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
 	}
@@ -115,7 +116,7 @@ public abstract class AbstractYarnClusterTests implements ApplicationContextAwar
 	 *
 	 * @param yarnClient the Yarn client
 	 */
-	@Autowired
+	//@Autowired
 	public void setYarnClient(YarnClient yarnClient) {
 		this.yarnClient = yarnClient;
 	}
