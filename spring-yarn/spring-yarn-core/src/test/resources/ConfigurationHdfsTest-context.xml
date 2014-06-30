@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:yarn="http://www.springframework.org/schema/yarn"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/yarn http://www.springframework.org/schema/yarn/spring-yarn.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+	<context:property-placeholder location="hadoop.properties" system-properties-mode="OVERRIDE"/>
+
+<!-- 	<yarn:configuration id="liu" keytab="/etc/security/phd/keytab/hdfs.service.keytab" principal="hdfs/hdsh2-a161.lss.emc.com@EXAMPLE.COM" securityMethod="kerbose"> -->
+	<!-- <yarn:configuration id="liu" keytab="/Users/liud1/project/springhadoopownrepo/spring-hadoop-samples/yarn/yarn/kill-application/target/foo.keytab" principal="foo" securityMethod="kerbose"> -->
+	<yarn:configuration id="liu">
+		fs.defaultFS=${hd.fs}
+		yarn.resourcemanager.address=${hd.rm}
+		fs.hdfs.impl=org.apache.hadoop.hdfs.DistributedFileSystem
+	</yarn:configuration>
+	<yarn:localresources configuration="liu">
+		<yarn:copy src="file:build/dependency-libs/*" dest="/lib/"/>
+		<yarn:copy src="file:build/libs/*" dest="/app/kill-application/"/>
+		<yarn:hdfs path="/app/kill-application/*.jar"/>
+		<yarn:hdfs path="/lib/*"/>
+	</yarn:localresources>
+
+	<yarn:environment configuration="liu">
+		<yarn:classpath use-yarn-app-classpath="true"/>
+	</yarn:environment>
+
+	<yarn:client id="client" app-name="kill-application" configuration="liu">
+		<yarn:master-runner/>
+	</yarn:client>
+	
+	
+	<!-- <yarn:configuration>
+	    keytab=/etc/security/phd/keytab/hdfs.service.keytab
+	    principal=hdfs/hdsh2-a161.lss.emc.com@EXAMPLE.COM
+	    securityMethod=kerbose
+	    isUserKinit=false
+		fs.defaultFS=${hd.fs}
+		yarn.resourcemanager.address=${hd.rm}
+		fs.hdfs.impl=org.apache.hadoop.hdfs.DistributedFileSystem
+	</yarn:configuration>
+	
+	<bean id="yarnCluster" class="org.springframework.yarn.test.support.YarnClusterFactoryBean">
+		<property name="clusterId" value="YarnClusterTests"/>
+		<property name="autoStart" value="true"/>
+	</bean>
+
+	<bean id="yarnConfiguredConfiguration" class="org.springframework.yarn.test.support.ConfigurationDelegatingFactoryBean">
+		<property name="cluster" ref="yarnCluster"/>
+	</bean>
+
+	<yarn:configuration id="yarnConfiguration" configuration-ref="yarnConfiguredConfiguration"/>
+	<yarn:localresources>
+		<yarn:copy src="file:build/dependency-libs/*" dest="/lib/"/>
+		<yarn:copy src="file:build/libs/*" dest="/app/kill-application/"/>
+		<yarn:hdfs path="/app/kill-application/*.jar"/>
+		<yarn:hdfs path="/lib/*"/>
+	</yarn:localresources>
+
+	<yarn:environment>
+		<yarn:classpath use-yarn-app-classpath="true"/>
+	</yarn:environment>
+
+	<yarn:client app-name="kill-application">
+		<yarn:master-runner/>
+	</yarn:client> -->
+
+</beans>
