@@ -714,7 +714,7 @@ configure(rootProject) {
 project('spring-data-hadoop-core') {
 	description = 'Spring for Apache Hadoop Core'
     dependencies {
-	    runtime "org.springframework.batch:spring-batch-core:$springBatchVersion"
+	    compile "org.springframework.batch:spring-batch-core:$springBatchVersion"
 	}
 }
 
